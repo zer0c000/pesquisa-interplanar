@@ -1,0 +1,575 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>INTER.PLANAR — O primeiro metaverso de música eletrônica</title>
+  <meta name="description" content="O único metaverso feito para quem vive a noite. Participe da pesquisa e ajude a construir o futuro da cena eletrônica.">
+  <meta property="og:title" content="INTER.PLANAR — Dimensional Transit">
+  <meta property="og:description" content="O primeiro metaverso brasileiro de música eletrônica. Participe da pesquisa.">
+  <meta property="og:image" content="/og-image.png">
+  <meta property="og:type" content="website">
+  <meta name="twitter:card" content="summary_large_image">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@300;400;500;600;700&family=Space+Grotesk:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --verde: #00ff41;
+      --verde-dim: #00cc33;
+      --cyan: #00ffff;
+      --preto: #0a0a0f;
+      --preto-card: #0e0e18;
+      --cinza-1: #14142a;
+      --cinza-2: #1e1e36;
+      --cinza-3: #666;
+      --cinza-4: #999;
+      --branco: #e0e0e0;
+      --branco-puro: #fff;
+      --mono: 'JetBrains Mono', 'Courier New', monospace;
+      --display: 'Space Grotesk', sans-serif;
+    }
+
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    html { scroll-behavior: smooth; }
+
+    body {
+      font-family: var(--mono);
+      background: var(--preto);
+      color: var(--branco);
+      min-height: 100vh;
+      overflow-x: hidden;
+      -webkit-font-smoothing: antialiased;
+    }
+
+    #bg-canvas {
+      position: fixed;
+      top: 0; left: 0;
+      width: 100%; height: 100%;
+      z-index: 0;
+      pointer-events: none;
+    }
+
+    body::before {
+      content: '';
+      position: fixed;
+      top: 0; left: 0;
+      width: 100%; height: 100%;
+      background: repeating-linear-gradient(
+        0deg, transparent, transparent 2px,
+        rgba(0, 255, 65, 0.012) 2px, rgba(0, 255, 65, 0.012) 4px
+      );
+      pointer-events: none;
+      z-index: 1;
+    }
+
+    .wrapper { position: relative; z-index: 2; }
+
+    /* ─── NAV ──────────────────────────────────────────────── */
+    nav {
+      position: fixed;
+      top: 0; left: 0; right: 0;
+      z-index: 100;
+      padding: 1.2rem 2rem;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      background: rgba(10, 10, 15, 0.85);
+      backdrop-filter: blur(16px);
+      border-bottom: 1px solid rgba(0, 255, 65, 0.08);
+    }
+
+    .nav-logo {
+      font-family: var(--mono);
+      font-size: 0.9rem;
+      font-weight: 700;
+      color: var(--verde);
+      letter-spacing: 0.15em;
+      text-decoration: none;
+    }
+
+    .nav-links { display: flex; gap: 2rem; align-items: center; }
+
+    .nav-links a {
+      font-size: 0.7rem;
+      color: var(--cinza-4);
+      text-decoration: none;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      transition: color 0.3s;
+    }
+
+    .nav-links a:hover { color: var(--verde); }
+
+    .nav-cta {
+      font-size: 0.65rem !important;
+      color: var(--preto) !important;
+      background: var(--verde);
+      padding: 0.5rem 1.2rem;
+      border-radius: 3px;
+      font-weight: 600;
+      transition: box-shadow 0.3s, transform 0.3s !important;
+    }
+
+    .nav-cta:hover {
+      box-shadow: 0 0 20px rgba(0, 255, 65, 0.4);
+      transform: translateY(-1px);
+    }
+
+    /* ─── HERO ─────────────────────────────────────────────── */
+    .hero {
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      text-align: center;
+      padding: 2rem;
+      position: relative;
+    }
+
+    .hero-pre {
+      font-size: 0.65rem;
+      color: var(--cinza-3);
+      letter-spacing: 0.4em;
+      text-transform: uppercase;
+      margin-bottom: 1.5rem;
+      opacity: 0;
+      animation: fadeIn 1s ease 0.3s forwards;
+    }
+
+    .hero-logo {
+      font-family: var(--mono);
+      font-size: clamp(2.5rem, 7vw, 5rem);
+      font-weight: 700;
+      color: var(--verde);
+      letter-spacing: 0.1em;
+      text-shadow: 0 0 40px rgba(0, 255, 65, 0.4), 0 0 80px rgba(0, 255, 65, 0.15);
+      margin-bottom: 0.5rem;
+      opacity: 0;
+      animation: fadeIn 1s ease 0.5s forwards;
+    }
+
+    .hero-sub {
+      font-size: 0.8rem;
+      color: var(--cyan);
+      letter-spacing: 0.35em;
+      text-transform: uppercase;
+      margin-bottom: 3rem;
+      opacity: 0;
+      animation: fadeIn 1s ease 0.7s forwards;
+    }
+
+    .hero-title {
+      font-family: var(--display);
+      font-size: clamp(1.2rem, 3vw, 1.8rem);
+      font-weight: 400;
+      color: var(--branco-puro);
+      max-width: 600px;
+      line-height: 1.6;
+      margin-bottom: 1rem;
+      opacity: 0;
+      animation: fadeIn 1s ease 0.9s forwards;
+    }
+
+    .hero-desc {
+      font-size: 0.85rem;
+      color: var(--cinza-4);
+      max-width: 480px;
+      line-height: 1.8;
+      margin-bottom: 3rem;
+      opacity: 0;
+      animation: fadeIn 1s ease 1.1s forwards;
+    }
+
+    .hero-desc em { color: var(--verde); font-style: normal; }
+
+    .hero-cta {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.6rem;
+      background: var(--verde);
+      color: var(--preto);
+      font-family: var(--mono);
+      font-size: 0.8rem;
+      font-weight: 700;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      text-decoration: none;
+      padding: 1rem 2.5rem;
+      border-radius: 4px;
+      transition: all 0.3s;
+      opacity: 0;
+      animation: fadeIn 1s ease 1.3s forwards;
+    }
+
+    .hero-cta:hover {
+      box-shadow: 0 0 30px rgba(0, 255, 65, 0.5), 0 0 60px rgba(0, 255, 65, 0.15);
+      transform: translateY(-2px);
+    }
+
+    .hero-cta .arrow { transition: transform 0.3s; }
+    .hero-cta:hover .arrow { transform: translateX(4px); }
+
+    .scroll-hint {
+      position: absolute;
+      bottom: 2rem;
+      font-size: 0.6rem;
+      color: var(--cinza-3);
+      letter-spacing: 0.2em;
+      text-transform: uppercase;
+      opacity: 0;
+      animation: fadeIn 1s ease 2s forwards, float 3s ease-in-out infinite;
+    }
+
+    @keyframes fadeIn { to { opacity: 1; } }
+    @keyframes float {
+      0%, 100% { transform: translateY(0); }
+      50% { transform: translateY(-6px); }
+    }
+
+    /* ─── MANIFESTO ────────────────────────────────────────── */
+    .manifesto {
+      padding: 6rem 2rem;
+      max-width: 700px;
+      margin: 0 auto;
+      text-align: center;
+      border-top: 1px solid rgba(0, 255, 65, 0.08);
+    }
+
+    .manifesto-quote {
+      font-family: var(--display);
+      font-size: clamp(1.3rem, 3vw, 1.9rem);
+      font-weight: 400;
+      color: var(--branco-puro);
+      line-height: 1.7;
+      margin-bottom: 2rem;
+    }
+
+    .manifesto-quote em { color: var(--verde); font-style: normal; }
+
+    .manifesto p {
+      font-size: 0.85rem;
+      color: var(--cinza-4);
+      line-height: 1.9;
+      margin-bottom: 1.2rem;
+    }
+
+    /* ─── CONCEITOS ────────────────────────────────────────── */
+    .concepts {
+      padding: 4rem 2rem 6rem;
+      max-width: 900px;
+      margin: 0 auto;
+    }
+
+    .concepts-heading {
+      text-align: center;
+      font-size: 0.6rem;
+      color: var(--verde-dim);
+      letter-spacing: 0.4em;
+      text-transform: uppercase;
+      margin-bottom: 3rem;
+    }
+
+    .concepts-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+      gap: 1.2rem;
+    }
+
+    .concept-card {
+      background: var(--preto-card);
+      border: 1px solid var(--cinza-1);
+      border-radius: 6px;
+      padding: 2rem 1.5rem;
+      text-align: center;
+      transition: border-color 0.3s, transform 0.3s;
+      opacity: 0;
+      transform: translateY(20px);
+    }
+
+    .concept-card.visible { animation: fadeInUp 0.6s ease forwards; }
+
+    @keyframes fadeInUp { to { opacity: 1; transform: translateY(0); } }
+
+    .concept-card:hover {
+      border-color: rgba(0, 255, 65, 0.2);
+      transform: translateY(-4px);
+    }
+
+    .concept-icon { font-size: 2rem; margin-bottom: 1rem; display: block; }
+
+    .concept-title {
+      font-family: var(--display);
+      font-size: 1rem;
+      font-weight: 600;
+      color: var(--branco-puro);
+      margin-bottom: 0.6rem;
+    }
+
+    .concept-desc {
+      font-size: 0.75rem;
+      color: var(--cinza-3);
+      line-height: 1.7;
+    }
+
+    .divider {
+      width: 120px;
+      height: 1px;
+      background: linear-gradient(90deg, transparent, var(--verde), transparent);
+      margin: 0 auto;
+    }
+
+    /* ─── CTA ──────────────────────────────────────────────── */
+    .cta-section {
+      text-align: center;
+      padding: 6rem 2rem 5rem;
+    }
+
+    .cta-emoji { font-size: 2.5rem; margin-bottom: 1.5rem; display: block; }
+
+    .cta-heading {
+      font-family: var(--display);
+      font-size: clamp(1.3rem, 3vw, 2rem);
+      font-weight: 600;
+      color: var(--branco-puro);
+      margin-bottom: 1rem;
+    }
+
+    .cta-desc {
+      font-size: 0.85rem;
+      color: var(--cinza-4);
+      max-width: 420px;
+      margin: 0 auto 2.5rem;
+      line-height: 1.7;
+    }
+
+    .cta-btn {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.6rem;
+      background: linear-gradient(135deg, var(--verde), var(--cyan));
+      color: var(--preto);
+      font-family: var(--mono);
+      font-size: 0.85rem;
+      font-weight: 700;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      text-decoration: none;
+      padding: 1.1rem 3rem;
+      border-radius: 4px;
+      transition: all 0.3s;
+    }
+
+    .cta-btn:hover {
+      box-shadow: 0 0 40px rgba(0, 255, 65, 0.4), 0 0 80px rgba(0, 255, 255, 0.15);
+      transform: translateY(-3px);
+    }
+
+    .cta-time {
+      display: block;
+      font-size: 0.65rem;
+      color: var(--cinza-3);
+      margin-top: 1rem;
+      letter-spacing: 0.1em;
+    }
+
+    /* ─── FOOTER ───────────────────────────────────────────── */
+    footer {
+      text-align: center;
+      padding: 3rem 2rem;
+      border-top: 1px solid var(--cinza-1);
+    }
+
+    .footer-logo {
+      font-family: var(--mono);
+      font-size: 0.8rem;
+      font-weight: 700;
+      color: var(--verde);
+      letter-spacing: 0.15em;
+      margin-bottom: 0.5rem;
+    }
+
+    .footer-tagline {
+      font-size: 0.65rem;
+      color: var(--cinza-3);
+      font-style: italic;
+      margin-bottom: 1.5rem;
+    }
+
+    .footer-copy { font-size: 0.6rem; color: var(--cinza-2); }
+
+    @media (max-width: 600px) {
+      nav { padding: 1rem; }
+      .nav-links a:not(.nav-cta) { display: none; }
+      .manifesto { padding: 4rem 1.5rem; }
+      .concepts { padding: 3rem 1.5rem 5rem; }
+      .concepts-grid { grid-template-columns: 1fr; }
+    }
+  </style>
+</head>
+<body>
+
+  <canvas id="bg-canvas"></canvas>
+
+  <div class="wrapper">
+
+    <nav>
+      <a href="/" class="nav-logo">INTER.PLANAR</a>
+      <div class="nav-links">
+        <a href="#sobre">Sobre</a>
+        <a href="/pesquisa.html" class="nav-cta">Participar da Pesquisa</a>
+      </div>
+    </nav>
+
+    <section class="hero">
+      <p class="hero-pre">/// Em construção — ajude a moldar o futuro</p>
+      <h1 class="hero-logo">INTER.PLANAR</h1>
+      <p class="hero-sub">Dimensional Transit</p>
+      <h2 class="hero-title">O primeiro metaverso brasileiro de música eletrônica</h2>
+      <p class="hero-desc">
+        Não é um jogo com shows esporádicos.<br>É um <em>território digital</em> construído pra quem vive a noite.
+      </p>
+      <a href="/pesquisa.html" class="hero-cta">
+        Participar da Pesquisa <span class="arrow">→</span>
+      </a>
+      <p class="scroll-hint">↓ saiba mais</p>
+    </section>
+
+    <section class="manifesto" id="sobre">
+      <p class="manifesto-quote">
+        Você não precisa estar na capital, ter grana pra VIP, ou encarar a madrugada pra <em>sentir a pista</em>.
+      </p>
+      <p>
+        A INTER.PLANAR nasceu em Belo Horizonte com uma pergunta simples: por que tanta gente que ama música eletrônica nunca pisou numa festa?
+      </p>
+      <p>
+        Estamos criando um espaço virtual imersivo — feito do zero pra replicar a experiência de um evento real. O som, a interação, a vibração. Tudo pensado por quem vive a cena.
+      </p>
+      <p>
+        Não é sobre substituir o presencial. É sobre dar acesso a quem nunca teve.
+      </p>
+    </section>
+
+    <div class="divider"></div>
+
+    <section class="concepts">
+      <p class="concepts-heading">O que estamos construindo</p>
+      <div class="concepts-grid">
+        <div class="concept-card">
+          <span class="concept-icon">🎧</span>
+          <div class="concept-title">Feito pra música</div>
+          <div class="concept-desc">Não é um jogo que faz eventos de vez em quando. Cada detalhe existe pra experiência sonora e visual da pista.</div>
+        </div>
+        <div class="concept-card">
+          <span class="concept-icon">🌍</span>
+          <div class="concept-title">De qualquer lugar</div>
+          <div class="concept-desc">Roda no navegador, sem download. De BH, do interior, de qualquer canto — a pista tá aberta.</div>
+        </div>
+        <div class="concept-card">
+          <span class="concept-icon">👥</span>
+          <div class="concept-title">Junto com gente real</div>
+          <div class="concept-desc">Interaja com outras pessoas no evento. Dance, converse, curta o set. Não é assistir — é estar lá.</div>
+        </div>
+        <div class="concept-card">
+          <span class="concept-icon">📦</span>
+          <div class="concept-title">Digital + Físico</div>
+          <div class="concept-desc">Imagine entrar na festa virtual e receber um kit na sua casa. A experiência não fica só na tela.</div>
+        </div>
+        <div class="concept-card">
+          <span class="concept-icon">🔊</span>
+          <div class="concept-title">DJs ao vivo</div>
+          <div class="concept-desc">Sets reais, curadoria de verdade. Feito com coletivos e artistas da cena eletrônica brasileira.</div>
+        </div>
+        <div class="concept-card">
+          <span class="concept-icon">🔓</span>
+          <div class="concept-title">Sem barreiras</div>
+          <div class="concept-desc">Sem preocupação com transporte, segurança ou lotação. Só você e a música.</div>
+        </div>
+      </div>
+    </section>
+
+    <div class="divider"></div>
+
+    <section class="cta-section">
+      <span class="cta-emoji">✦</span>
+      <h2 class="cta-heading">A gente precisa de você</h2>
+      <p class="cta-desc">
+        Estamos construindo isso do zero e queremos ouvir quem realmente vive a cena. Responde nossa pesquisa — sua opinião molda o que vem por aí.
+      </p>
+      <a href="/pesquisa.html" class="cta-btn">Responder pesquisa →</a>
+      <span class="cta-time">~4 min · anônimo · 100% gratuito</span>
+    </section>
+
+    <footer>
+      <div class="footer-logo">INTER.PLANAR</div>
+      <div class="footer-tagline">O único metaverso feito para quem vive a noite.</div>
+      <p class="footer-copy">© 2026 — Belo Horizonte, MG</p>
+    </footer>
+
+  </div>
+
+  <script>
+    const canvas = document.getElementById('bg-canvas');
+    const ctx = canvas.getContext('2d');
+    let particles = [];
+    let w, h;
+
+    function resize() {
+      w = canvas.width = window.innerWidth;
+      h = canvas.height = window.innerHeight;
+    }
+
+    function initParticles() {
+      particles = [];
+      const count = Math.min(50, Math.floor(w * h / 25000));
+      for (let i = 0; i < count; i++) {
+        particles.push({
+          x: Math.random() * w, y: Math.random() * h,
+          vx: (Math.random() - 0.5) * 0.25, vy: (Math.random() - 0.5) * 0.25,
+          r: Math.random() * 1.5 + 0.5, a: Math.random() * 0.25 + 0.08,
+        });
+      }
+    }
+
+    function draw() {
+      ctx.clearRect(0, 0, w, h);
+      particles.forEach(p => {
+        p.x += p.vx; p.y += p.vy;
+        if (p.x < 0) p.x = w; if (p.x > w) p.x = 0;
+        if (p.y < 0) p.y = h; if (p.y > h) p.y = 0;
+        ctx.beginPath();
+        ctx.arc(p.x, p.y, p.r, 0, Math.PI * 2);
+        ctx.fillStyle = `rgba(0, 255, 65, ${p.a})`;
+        ctx.fill();
+      });
+      for (let i = 0; i < particles.length; i++) {
+        for (let j = i + 1; j < particles.length; j++) {
+          const dx = particles[i].x - particles[j].x;
+          const dy = particles[i].y - particles[j].y;
+          const dist = Math.sqrt(dx * dx + dy * dy);
+          if (dist < 100) {
+            ctx.beginPath();
+            ctx.moveTo(particles[i].x, particles[i].y);
+            ctx.lineTo(particles[j].x, particles[j].y);
+            ctx.strokeStyle = `rgba(0, 255, 65, ${0.05 * (1 - dist / 100)})`;
+            ctx.lineWidth = 0.5;
+            ctx.stroke();
+          }
+        }
+      }
+      requestAnimationFrame(draw);
+    }
+
+    resize(); initParticles(); draw();
+    window.addEventListener('resize', () => { resize(); initParticles(); });
+
+    const observer = new IntersectionObserver((entries) => {
+      entries.forEach((entry, i) => {
+        if (entry.isIntersecting) setTimeout(() => entry.target.classList.add('visible'), i * 100);
+      });
+    }, { threshold: 0.2 });
+    document.querySelectorAll('.concept-card').forEach(el => observer.observe(el));
+  </script>
+
+</body>
+</html>
