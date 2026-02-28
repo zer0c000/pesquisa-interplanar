@@ -65,38 +65,21 @@ function doPost(e) {
     // Criar cabeçalhos na primeira vez
     if (sheet.getLastRow() === 0) {
       sheet.appendRow(COLUNAS);
-      // Formatar cabeçalho
       var headerRange = sheet.getRange(1, 1, 1, COLUNAS.length);
       headerRange.setFontWeight('bold');
       headerRange.setBackground('#00CC55');
       headerRange.setFontColor('#0A0A0F');
     }
     
-    // Aceita tanto JSON direto quanto form payload
-    var data;
-    if (e.parameter && e.parameter.payload) {
-      data = JSON.parse(e.parameter.payload);
-    } else if (e.postData && e.postData.contents) {
-      data = JSON.parse(e.postData.contents);
-    }
-    
-    if (!data) {
-      return ContentService
-        .createTextOutput(JSON.stringify({ status: 'erro', message: 'Sem dados' }))
-        .setMimeType(ContentService.MimeType.JSON);
-    }
-    
-    // Montar linha na ordem das colunas
+    // Ler campos diretamente do form POST
     var row = COLUNAS.map(function(col) {
-      return data[col] || '';
+      return e.parameter[col] || '';
     });
     
-    // Adicionar à planilha
     sheet.appendRow(row);
     
-    // Retornar sucesso
     return ContentService
-      .createTextOutput(JSON.stringify({ status: 'ok', message: 'Resposta salva!' }))
+      .createTextOutput(JSON.stringify({ status: 'ok' }))
       .setMimeType(ContentService.MimeType.JSON);
       
   } catch (error) {

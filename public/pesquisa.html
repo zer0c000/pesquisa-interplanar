@@ -1262,21 +1262,7 @@
       const data = collectData();
       const GOOGLE_SHEETS_URL = 'https://script.google.com/macros/s/AKfycbwze8XI0FSFOgwd4tHCLCq6rCog6pfz_OkVlw8NTndtzAzgms0Z3bAWZ2NHW_nmMaMFvA/exec';
 
-      // Enviar via form hidden pra evitar problemas de CORS
-      const form = document.createElement('form');
-      form.method = 'POST';
-      form.action = GOOGLE_SHEETS_URL;
-      form.target = 'hidden-iframe';
-      form.style.display = 'none';
-
-      // Enviar todos os dados como um campo JSON
-      const input = document.createElement('input');
-      input.type = 'hidden';
-      input.name = 'payload';
-      input.value = JSON.stringify(data);
-      form.appendChild(input);
-
-      // Iframe invisível pra não redirecionar a página
+      // Iframe invisível
       let iframe = document.getElementById('hidden-iframe');
       if (!iframe) {
         iframe = document.createElement('iframe');
@@ -1286,11 +1272,26 @@
         document.body.appendChild(iframe);
       }
 
+      // Criar form com cada campo separado
+      const form = document.createElement('form');
+      form.method = 'POST';
+      form.action = GOOGLE_SHEETS_URL;
+      form.target = 'hidden-iframe';
+      form.style.display = 'none';
+
+      Object.keys(data).forEach(key => {
+        const input = document.createElement('input');
+        input.type = 'hidden';
+        input.name = key;
+        input.value = data[key];
+        form.appendChild(input);
+      });
+
       document.body.appendChild(form);
       form.submit();
+      document.body.removeChild(form);
 
-      // Mostrar agradecimento após breve delay
-      setTimeout(showThankYou, 1000);
+      setTimeout(showThankYou, 1500);
     }
 
     function showThankYou() {
