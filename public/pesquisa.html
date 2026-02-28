@@ -1260,14 +1260,18 @@
         params.append(key, data[key]);
       });
 
-      // Enviar via GET (funciona sempre, sem CORS)
-      const img = new Image();
-      img.src = GOOGLE_SHEETS_URL + '?' + params.toString();
+      const url = GOOGLE_SHEETS_URL + '?' + params.toString();
+
+      // Enviar via iframe (segue redirects do Google Apps Script)
+      const iframe = document.createElement('iframe');
+      iframe.style.display = 'none';
+      iframe.src = url;
+      document.body.appendChild(iframe);
       
-      // Redirecionar pra página de obrigado
+      // Redirecionar pra página de obrigado após dar tempo pro iframe carregar
       setTimeout(() => {
         window.location.href = '/obrigado.html';
-      }, 1200);
+      }, 2000);
     }
 
     // Init
