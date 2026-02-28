@@ -1251,38 +1251,46 @@
     let isSubmitting = false;
 
     function submitForm() {
-      // Trava contra clique duplo
       if (isSubmitting) return;
       isSubmitting = true;
 
-      // Feedback visual no botão
       const btn = document.querySelector('.btn-submit');
-      const originalText = btn.textContent;
       btn.textContent = 'Enviando...';
       btn.disabled = true;
       btn.style.opacity = '0.5';
 
       const data = collectData();
-      
       const GOOGLE_SHEETS_URL = 'https://script.google.com/macros/s/AKfycbwze8XI0FSFOgwd4tHCLCq6rCog6pfz_OkVlw8NTndtzAzgms0Z3bAWZ2NHW_nmMaMFvA/exec';
 
-      if (GOOGLE_SHEETS_URL) {
-        fetch(GOOGLE_SHEETS_URL, {
-          method: 'POST',
-          mode: 'no-cors',
-          headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify(data),
-        }).then(() => {
-          showThankYou();
-        }).catch(err => {
-          console.log('Erro ao salvar:', err);
-          // Mostra agradecimento mesmo assim (no-cors não retorna status)
-          showThankYou();
-        });
-      } else {
-        console.log('Dados do formulário:', JSON.stringify(data, null, 2));
-        showThankYou();
+      // Enviar via form hidden pra evitar problemas de CORS
+      const form = document.createElement('form');
+      form.method = 'POST';
+      form.action = GOOGLE_SHEETS_URL;
+      form.target = 'hidden-iframe';
+      form.style.display = 'none';
+
+      // Enviar todos os dados como um campo JSON
+      const input = document.createElement('input');
+      input.type = 'hidden';
+      input.name = 'payload';
+      input.value = JSON.stringify(data);
+      form.appendChild(input);
+
+      // Iframe invisível pra não redirecionar a página
+      let iframe = document.getElementById('hidden-iframe');
+      if (!iframe) {
+        iframe = document.createElement('iframe');
+        iframe.name = 'hidden-iframe';
+        iframe.id = 'hidden-iframe';
+        iframe.style.display = 'none';
+        document.body.appendChild(iframe);
       }
+
+      document.body.appendChild(form);
+      form.submit();
+
+      // Mostrar agradecimento após breve delay
+      setTimeout(showThankYou, 1000);
     }
 
     function showThankYou() {

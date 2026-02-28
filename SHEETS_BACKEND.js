@@ -72,8 +72,19 @@ function doPost(e) {
       headerRange.setFontColor('#0A0A0F');
     }
     
-    // Parsear dados recebidos
-    var data = JSON.parse(e.postData.contents);
+    // Aceita tanto JSON direto quanto form payload
+    var data;
+    if (e.parameter && e.parameter.payload) {
+      data = JSON.parse(e.parameter.payload);
+    } else if (e.postData && e.postData.contents) {
+      data = JSON.parse(e.postData.contents);
+    }
+    
+    if (!data) {
+      return ContentService
+        .createTextOutput(JSON.stringify({ status: 'erro', message: 'Sem dados' }))
+        .setMimeType(ContentService.MimeType.JSON);
+    }
     
     // Montar linha na ordem das colunas
     var row = COLUNAS.map(function(col) {
