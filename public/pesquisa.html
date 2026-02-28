@@ -1281,31 +1281,26 @@
       btn.disabled = true;
       btn.style.opacity = '0.5';
 
-      // Coleta página atual + tudo que sobrou
+      // Coleta página atual
       collectCurrentPage();
+      // Coleta tudo como backup
       collectAllData();
 
       const data = savedData;
-      
-      // Montar URL com query string
       const GOOGLE_SHEETS_URL = 'https://script.google.com/macros/s/AKfycbwze8XI0FSFOgwd4tHCLCq6rCog6pfz_OkVlw8NTndtzAzgms0Z3bAWZ2NHW_nmMaMFvA/exec';
       const params = new URLSearchParams();
       Object.keys(data).forEach(key => {
         params.append(key, data[key]);
       });
 
-      const url = GOOGLE_SHEETS_URL + '?' + params.toString();
-
-      // Enviar via iframe (segue redirects do Google Apps Script)
-      const iframe = document.createElement('iframe');
-      iframe.style.display = 'none';
-      iframe.src = url;
-      document.body.appendChild(iframe);
-      
-      // Redirecionar pra página de obrigado
-      setTimeout(() => {
+      fetch(GOOGLE_SHEETS_URL + '?' + params.toString(), {
+        mode: 'no-cors',
+        redirect: 'follow'
+      }).then(() => {
         window.location.href = '/obrigado.html';
-      }, 2000);
+      }).catch(() => {
+        window.location.href = '/obrigado.html';
+      });
     }
 
     // Init
