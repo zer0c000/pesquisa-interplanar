@@ -581,8 +581,19 @@
     }
 
     /* ─── HIDDEN SECTIONS ────────────────────────────────────── */
-    .page { display: none; }
-    .page.active { display: block; }
+    .page { 
+      position: absolute;
+      left: -9999px;
+      opacity: 0;
+      pointer-events: none;
+      width: 100%;
+    }
+    .page.active { 
+      position: relative;
+      left: 0;
+      opacity: 1;
+      pointer-events: auto;
+    }
 
     /* ─── RESPONSIVE ─────────────────────────────────────────── */
     @media (max-width: 600px) {
@@ -1237,19 +1248,21 @@
     }
 
     // ─── SUBMIT ─────────────────────────────────────────────
-    function submitForm() {
-      const data = collectData();
+    let isSubmitting = false;
 
-      // ╔═══════════════════════════════════════════════════════╗
-      // ║  INTEGRAÇÃO COM GOOGLE SHEETS                        ║
-      // ║                                                       ║
-      // ║  Para salvar respostas no Google Sheets:               ║
-      // ║  1. Crie uma planilha no Google Sheets                 ║
-      // ║  2. Vá em Extensões > Apps Script                      ║
-      // ║  3. Cole o código do arquivo SHEETS_BACKEND.js         ║
-      // ║  4. Faça deploy como Web App (acesso: qualquer um)     ║
-      // ║  5. Copie a URL e cole abaixo                          ║
-      // ╚═══════════════════════════════════════════════════════╝
+    function submitForm() {
+      // Trava contra clique duplo
+      if (isSubmitting) return;
+      isSubmitting = true;
+
+      // Feedback visual no botão
+      const btn = document.querySelector('.btn-submit');
+      const originalText = btn.textContent;
+      btn.textContent = 'Enviando...';
+      btn.disabled = true;
+      btn.style.opacity = '0.5';
+
+      const data = collectData();
       
       const GOOGLE_SHEETS_URL = 'https://script.google.com/macros/s/AKfycbwze8XI0FSFOgwd4tHCLCq6rCog6pfz_OkVlw8NTndtzAzgms0Z3bAWZ2NHW_nmMaMFvA/exec';
 
@@ -1259,12 +1272,20 @@
           mode: 'no-cors',
           headers: { 'Content-Type': 'application/json' },
           body: JSON.stringify(data),
-        }).catch(err => console.log('Erro ao salvar:', err));
+        }).then(() => {
+          showThankYou();
+        }).catch(err => {
+          console.log('Erro ao salvar:', err);
+          // Mostra agradecimento mesmo assim (no-cors não retorna status)
+          showThankYou();
+        });
       } else {
         console.log('Dados do formulário:', JSON.stringify(data, null, 2));
+        showThankYou();
       }
+    }
 
-      // Show thank you
+    function showThankYou() {
       document.getElementById('survey-form').style.display = 'none';
       document.querySelector('.progress-container').style.display = 'none';
       document.getElementById('thank-you').classList.add('visible');
