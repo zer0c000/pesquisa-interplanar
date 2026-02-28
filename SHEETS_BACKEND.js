@@ -24,6 +24,7 @@ var COLUNAS = [
   'timestamp',
   'idade',
   'genero',
+  'estado',
   'cidade',
   'renda',
   'profissao',

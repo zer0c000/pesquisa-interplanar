@@ -404,8 +404,8 @@
     }
 
     .scale-btn {
-      width: 48px;
-      height: 48px;
+      width: 40px;
+      height: 40px;
       display: flex;
       align-items: center;
       justify-content: center;
@@ -414,7 +414,7 @@
       border-radius: 4px;
       color: var(--cinza-3);
       font-family: var(--mono);
-      font-size: 0.9rem;
+      font-size: 0.8rem;
       font-weight: 600;
       cursor: pointer;
       transition: all 0.2s ease;
@@ -590,7 +590,7 @@
       .logo { font-size: 1.6rem; }
       .hero-title { font-size: 1.15rem; }
       .question { padding: 1rem; }
-      .scale-btn { width: 42px; height: 42px; font-size: 0.8rem; }
+      .scale-btn { width: 30px; height: 36px; font-size: 0.7rem; }
       .scale-options { gap: 0.35rem; }
       .option { padding: 0.55rem 0.7rem; }
     }
@@ -659,15 +659,42 @@
           </div>
 
           <div class="question" data-required="true">
-            <div class="question-label">Onde você mora?<span class="required-star">*</span></div>
+            <div class="question-label">Em qual estado você mora?<span class="required-star">*</span></div>
             <div class="options">
-              <label class="option"><input type="radio" name="cidade" value="BH"><span class="custom-radio"></span><span class="option-text">Belo Horizonte</span></label>
-              <label class="option"><input type="radio" name="cidade" value="RMBH"><span class="custom-radio"></span><span class="option-text">Região metropolitana de BH</span></label>
-              <label class="option"><input type="radio" name="cidade" value="MG"><span class="custom-radio"></span><span class="option-text">Interior de Minas Gerais</span></label>
-              <label class="option"><input type="radio" name="cidade" value="SP"><span class="custom-radio"></span><span class="option-text">São Paulo (capital ou estado)</span></label>
-              <label class="option"><input type="radio" name="cidade" value="RJ"><span class="custom-radio"></span><span class="option-text">Rio de Janeiro (capital ou estado)</span></label>
-              <label class="option"><input type="radio" name="cidade" value="outro-BR"><span class="custom-radio"></span><span class="option-text">Outro estado do Brasil</span></label>
-              <label class="option"><input type="radio" name="cidade" value="exterior"><span class="custom-radio"></span><span class="option-text">Fora do Brasil</span></label>
+              <label class="option"><input type="radio" name="estado" value="AC"><span class="custom-radio"></span><span class="option-text">Acre</span></label>
+              <label class="option"><input type="radio" name="estado" value="AL"><span class="custom-radio"></span><span class="option-text">Alagoas</span></label>
+              <label class="option"><input type="radio" name="estado" value="AP"><span class="custom-radio"></span><span class="option-text">Amapá</span></label>
+              <label class="option"><input type="radio" name="estado" value="AM"><span class="custom-radio"></span><span class="option-text">Amazonas</span></label>
+              <label class="option"><input type="radio" name="estado" value="BA"><span class="custom-radio"></span><span class="option-text">Bahia</span></label>
+              <label class="option"><input type="radio" name="estado" value="CE"><span class="custom-radio"></span><span class="option-text">Ceará</span></label>
+              <label class="option"><input type="radio" name="estado" value="DF"><span class="custom-radio"></span><span class="option-text">Distrito Federal</span></label>
+              <label class="option"><input type="radio" name="estado" value="ES"><span class="custom-radio"></span><span class="option-text">Espírito Santo</span></label>
+              <label class="option"><input type="radio" name="estado" value="GO"><span class="custom-radio"></span><span class="option-text">Goiás</span></label>
+              <label class="option"><input type="radio" name="estado" value="MA"><span class="custom-radio"></span><span class="option-text">Maranhão</span></label>
+              <label class="option"><input type="radio" name="estado" value="MT"><span class="custom-radio"></span><span class="option-text">Mato Grosso</span></label>
+              <label class="option"><input type="radio" name="estado" value="MS"><span class="custom-radio"></span><span class="option-text">Mato Grosso do Sul</span></label>
+              <label class="option"><input type="radio" name="estado" value="MG"><span class="custom-radio"></span><span class="option-text">Minas Gerais</span></label>
+              <label class="option"><input type="radio" name="estado" value="PA"><span class="custom-radio"></span><span class="option-text">Pará</span></label>
+              <label class="option"><input type="radio" name="estado" value="PB"><span class="custom-radio"></span><span class="option-text">Paraíba</span></label>
+              <label class="option"><input type="radio" name="estado" value="PR"><span class="custom-radio"></span><span class="option-text">Paraná</span></label>
+              <label class="option"><input type="radio" name="estado" value="PE"><span class="custom-radio"></span><span class="option-text">Pernambuco</span></label>
+              <label class="option"><input type="radio" name="estado" value="PI"><span class="custom-radio"></span><span class="option-text">Piauí</span></label>
+              <label class="option"><input type="radio" name="estado" value="RJ"><span class="custom-radio"></span><span class="option-text">Rio de Janeiro</span></label>
+              <label class="option"><input type="radio" name="estado" value="RN"><span class="custom-radio"></span><span class="option-text">Rio Grande do Norte</span></label>
+              <label class="option"><input type="radio" name="estado" value="RS"><span class="custom-radio"></span><span class="option-text">Rio Grande do Sul</span></label>
+              <label class="option"><input type="radio" name="estado" value="RO"><span class="custom-radio"></span><span class="option-text">Rondônia</span></label>
+              <label class="option"><input type="radio" name="estado" value="RR"><span class="custom-radio"></span><span class="option-text">Roraima</span></label>
+              <label class="option"><input type="radio" name="estado" value="SC"><span class="custom-radio"></span><span class="option-text">Santa Catarina</span></label>
+              <label class="option"><input type="radio" name="estado" value="SP"><span class="custom-radio"></span><span class="option-text">São Paulo</span></label>
+              <label class="option"><input type="radio" name="estado" value="SE"><span class="custom-radio"></span><span class="option-text">Sergipe</span></label>
+              <label class="option"><input type="radio" name="estado" value="TO"><span class="custom-radio"></span><span class="option-text">Tocantins</span></label>
+              <label class="option"><input type="radio" name="estado" value="exterior"><span class="custom-radio"></span><span class="option-text">Fora do Brasil</span></label>
+            </div>
+          </div>
+
+          <div class="question" data-required="true">
+            <div class="question-label">Qual a sua cidade?<span class="required-star">*</span></div>
+            <input type="text" name="cidade" class="text-input" placeholder="Ex: Belo Horizonte, Contagem, São Paulo...">
             </div>
           </div>
 
@@ -815,7 +842,7 @@
           </div>
 
           <div class="question" data-required="true">
-            <div class="question-label">De 1 a 5, quanto o custo é uma barreira pra você?<span class="required-star">*</span></div>
+            <div class="question-label">De 1 a 10, quanto o custo é uma barreira pra você?<span class="required-star">*</span></div>
             <div class="scale-container">
               <div class="scale-labels"><span>Não é barreira</span><span>Barreira enorme</span></div>
               <div class="scale-options">
@@ -824,13 +851,18 @@
                 <div class="scale-btn" data-name="barreira_custo" data-value="3" onclick="selectScale(this)">3</div>
                 <div class="scale-btn" data-name="barreira_custo" data-value="4" onclick="selectScale(this)">4</div>
                 <div class="scale-btn" data-name="barreira_custo" data-value="5" onclick="selectScale(this)">5</div>
+                <div class="scale-btn" data-name="barreira_custo" data-value="6" onclick="selectScale(this)">6</div>
+                <div class="scale-btn" data-name="barreira_custo" data-value="7" onclick="selectScale(this)">7</div>
+                <div class="scale-btn" data-name="barreira_custo" data-value="8" onclick="selectScale(this)">8</div>
+                <div class="scale-btn" data-name="barreira_custo" data-value="9" onclick="selectScale(this)">9</div>
+                <div class="scale-btn" data-name="barreira_custo" data-value="10" onclick="selectScale(this)">10</div>
               </div>
               <input type="hidden" name="barreira_custo" value="">
             </div>
           </div>
 
           <div class="question" data-required="true">
-            <div class="question-label">De 1 a 5, quanto a distância/localização é uma barreira?<span class="required-star">*</span></div>
+            <div class="question-label">De 1 a 10, quanto a distância/localização é uma barreira?<span class="required-star">*</span></div>
             <div class="scale-container">
               <div class="scale-labels"><span>Não é barreira</span><span>Barreira enorme</span></div>
               <div class="scale-options">
@@ -839,6 +871,11 @@
                 <div class="scale-btn" data-name="barreira_distancia" data-value="3" onclick="selectScale(this)">3</div>
                 <div class="scale-btn" data-name="barreira_distancia" data-value="4" onclick="selectScale(this)">4</div>
                 <div class="scale-btn" data-name="barreira_distancia" data-value="5" onclick="selectScale(this)">5</div>
+                <div class="scale-btn" data-name="barreira_distancia" data-value="6" onclick="selectScale(this)">6</div>
+                <div class="scale-btn" data-name="barreira_distancia" data-value="7" onclick="selectScale(this)">7</div>
+                <div class="scale-btn" data-name="barreira_distancia" data-value="8" onclick="selectScale(this)">8</div>
+                <div class="scale-btn" data-name="barreira_distancia" data-value="9" onclick="selectScale(this)">9</div>
+                <div class="scale-btn" data-name="barreira_distancia" data-value="10" onclick="selectScale(this)">10</div>
               </div>
               <input type="hidden" name="barreira_distancia" value="">
             </div>
@@ -889,7 +926,7 @@
           </div>
 
           <div class="question" data-required="true">
-            <div class="question-label">De 1 a 5, quanto a ideia te anima?<span class="required-star">*</span></div>
+            <div class="question-label">De 1 a 10, quanto a ideia te anima?<span class="required-star">*</span></div>
             <div class="scale-container">
               <div class="scale-labels"><span>Nada animado</span><span>Muito animado</span></div>
               <div class="scale-options">
@@ -898,6 +935,11 @@
                 <div class="scale-btn" data-name="animacao" data-value="3" onclick="selectScale(this)">3</div>
                 <div class="scale-btn" data-name="animacao" data-value="4" onclick="selectScale(this)">4</div>
                 <div class="scale-btn" data-name="animacao" data-value="5" onclick="selectScale(this)">5</div>
+                <div class="scale-btn" data-name="animacao" data-value="6" onclick="selectScale(this)">6</div>
+                <div class="scale-btn" data-name="animacao" data-value="7" onclick="selectScale(this)">7</div>
+                <div class="scale-btn" data-name="animacao" data-value="8" onclick="selectScale(this)">8</div>
+                <div class="scale-btn" data-name="animacao" data-value="9" onclick="selectScale(this)">9</div>
+                <div class="scale-btn" data-name="animacao" data-value="10" onclick="selectScale(this)">10</div>
               </div>
               <input type="hidden" name="animacao" value="">
             </div>
