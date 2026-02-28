@@ -1,67 +1,30 @@
 // ═══════════════════════════════════════════════════════════════════════
-// INTER.PLANAR — Backend Google Sheets para receber respostas
+// INTER.PLANAR — Backend Google Sheets
 // ═══════════════════════════════════════════════════════════════════════
-//
-// COMO CONFIGURAR:
-//
-// 1. Crie uma nova planilha no Google Sheets
-// 2. Vá em Extensões > Apps Script
-// 3. Apague o código padrão e cole este script
-// 4. Clique em "Implantar" > "Nova Implantação"
-// 5. Tipo: "App da Web"
-// 6. Executar como: "Eu"
-// 7. Quem tem acesso: "Qualquer pessoa"
-// 8. Clique em "Implantar"
-// 9. Copie a URL gerada
-// 10. Cole a URL no arquivo interplanar-pesquisa.html na variável GOOGLE_SHEETS_URL
-//
-// Pronto! Cada resposta do formulário HTML será salva como uma nova linha
-// na planilha automaticamente.
+// Recebe dados via GET query params e salva na planilha.
 // ═══════════════════════════════════════════════════════════════════════
 
-// Colunas esperadas (na ordem que aparecerão na planilha)
 var COLUNAS = [
-  'timestamp',
-  'idade',
-  'genero',
-  'estado',
-  'cidade',
-  'renda',
-  'profissao',
-  'curte_eletronica',
-  'generos',
-  'frequencia',
-  'gasto',
-  'decisao',
-  'obs_eventos',
-  'barreiras',
-  'barreira_custo',
-  'barreira_distancia',
-  'obs_barreiras',
-  'evento_virtual',
-  'usaria',
-  'animacao',
-  'preco_ingresso',
-  'combo',
-  'kit_itens',
-  'preco_combo',
-  'obs_kit',
-  'patrocinio_influencia',
-  'marcas_desejadas',
-  'atrativos',
-  'objecoes',
-  'dispositivos',
-  'usa_metaverso',
-  'descoberta',
-  'obs_digital',
-  'contato',
-  'comentario'
+  'timestamp','idade','genero','estado','cidade','renda','profissao',
+  'curte_eletronica','generos','frequencia','gasto','decisao','obs_eventos',
+  'barreiras','barreira_custo','barreira_distancia','obs_barreiras',
+  'evento_virtual','usaria','animacao','preco_ingresso','combo','kit_itens',
+  'preco_combo','obs_kit','patrocinio_influencia','marcas_desejadas',
+  'atrativos','objecoes','dispositivos','usa_metaverso','descoberta',
+  'obs_digital','contato','comentario'
 ];
 
-function doPost(e) {
+function doGet(e) {
   try {
+    // Se não tem parâmetro timestamp, é só um ping
+    if (!e.parameter.timestamp) {
+      return ContentService
+        .createTextOutput(JSON.stringify({ status: 'ok', message: 'API ativa' }))
+        .setMimeType(ContentService.MimeType.JSON);
+    }
+
     var sheet = SpreadsheetApp.getActiveSpreadsheet().getActiveSheet();
-    
+
     // Criar cabeçalhos na primeira vez
     if (sheet.getLastRow() === 0) {
       sheet.appendRow(COLUNAS);
@@ -70,18 +33,19 @@ function doPost(e) {
       headerRange.setBackground('#00CC55');
       headerRange.setFontColor('#0A0A0F');
     }
-    
-    // Ler campos diretamente do form POST
+
+    // Ler cada campo dos query params
     var row = COLUNAS.map(function(col) {
       return e.parameter[col] || '';
     });
-    
+
     sheet.appendRow(row);
-    
+
+    // Retornar 1x1 pixel transparente (pra funcionar com new Image())
     return ContentService
       .createTextOutput(JSON.stringify({ status: 'ok' }))
       .setMimeType(ContentService.MimeType.JSON);
-      
+
   } catch (error) {
     return ContentService
       .createTextOutput(JSON.stringify({ status: 'erro', message: error.toString() }))
@@ -89,9 +53,6 @@ function doPost(e) {
   }
 }
 
-// Necessário para CORS
-function doGet(e) {
-  return ContentService
-    .createTextOutput(JSON.stringify({ status: 'ok', message: 'INTER.PLANAR Survey API ativa' }))
-    .setMimeType(ContentService.MimeType.JSON);
+function doPost(e) {
+  return doGet(e);
 }

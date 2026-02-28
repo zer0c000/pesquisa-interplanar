@@ -1,0 +1,196 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>INTER.PLANAR — Valeu!</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@300;400;500;600;700&family=Space+Grotesk:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --verde: #00ff41;
+      --verde-dim: #00cc33;
+      --cyan: #00ffff;
+      --preto: #0a0a0f;
+      --cinza-1: #14142a;
+      --cinza-3: #666;
+      --cinza-4: #999;
+      --branco: #e0e0e0;
+      --branco-puro: #fff;
+      --mono: 'JetBrains Mono', 'Courier New', monospace;
+      --display: 'Space Grotesk', sans-serif;
+    }
+
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+
+    body {
+      font-family: var(--mono);
+      background: var(--preto);
+      color: var(--branco);
+      min-height: 100vh;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      overflow: hidden;
+      -webkit-font-smoothing: antialiased;
+    }
+
+    body::before {
+      content: '';
+      position: fixed;
+      top: 0; left: 0;
+      width: 100%; height: 100%;
+      background: 
+        radial-gradient(ellipse at 30% 20%, rgba(0, 255, 65, 0.06) 0%, transparent 50%),
+        radial-gradient(ellipse at 70% 80%, rgba(0, 255, 255, 0.04) 0%, transparent 50%),
+        repeating-linear-gradient(0deg, transparent, transparent 2px, rgba(0, 255, 65, 0.012) 2px, rgba(0, 255, 65, 0.012) 4px);
+      pointer-events: none;
+      z-index: 0;
+    }
+
+    .container {
+      position: relative;
+      z-index: 1;
+      text-align: center;
+      padding: 2rem;
+      max-width: 500px;
+      animation: fadeInUp 0.8s ease;
+    }
+
+    @keyframes fadeInUp {
+      from { opacity: 0; transform: translateY(30px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+
+    .check {
+      width: 80px;
+      height: 80px;
+      border: 2px solid var(--verde);
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      margin: 0 auto 2rem;
+      box-shadow: 0 0 30px rgba(0, 255, 65, 0.2), 0 0 60px rgba(0, 255, 65, 0.1);
+      animation: pulseGlow 3s ease-in-out infinite;
+    }
+
+    @keyframes pulseGlow {
+      0%, 100% { box-shadow: 0 0 30px rgba(0, 255, 65, 0.2), 0 0 60px rgba(0, 255, 65, 0.1); }
+      50% { box-shadow: 0 0 40px rgba(0, 255, 65, 0.4), 0 0 80px rgba(0, 255, 65, 0.2); }
+    }
+
+    .check svg {
+      width: 36px;
+      height: 36px;
+      stroke: var(--verde);
+      fill: none;
+      stroke-width: 2.5;
+      stroke-linecap: round;
+      stroke-linejoin: round;
+      stroke-dasharray: 50;
+      stroke-dashoffset: 50;
+      animation: drawCheck 0.6s ease 0.3s forwards;
+    }
+
+    @keyframes drawCheck {
+      to { stroke-dashoffset: 0; }
+    }
+
+    .logo {
+      font-family: var(--mono);
+      font-size: 1.8rem;
+      font-weight: 700;
+      color: var(--verde);
+      letter-spacing: 0.15em;
+      text-shadow: 0 0 30px rgba(0, 255, 65, 0.4);
+      margin-bottom: 0.3rem;
+    }
+
+    .subtitle {
+      font-size: 0.65rem;
+      color: var(--cyan);
+      letter-spacing: 0.3em;
+      text-transform: uppercase;
+      opacity: 0.7;
+      margin-bottom: 2.5rem;
+    }
+
+    h1 {
+      font-family: var(--display);
+      font-size: 1.6rem;
+      font-weight: 600;
+      color: var(--branco-puro);
+      margin-bottom: 1rem;
+    }
+
+    .message {
+      font-size: 0.85rem;
+      color: var(--cinza-4);
+      line-height: 1.8;
+      margin-bottom: 2.5rem;
+    }
+
+    .message em {
+      color: var(--verde);
+      font-style: normal;
+    }
+
+    .tagline {
+      font-size: 0.75rem;
+      color: var(--verde-dim);
+      font-style: italic;
+      margin-bottom: 2rem;
+      opacity: 0.8;
+    }
+
+    .btn-home {
+      display: inline-block;
+      font-family: var(--mono);
+      font-size: 0.7rem;
+      font-weight: 600;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      color: var(--cinza-3);
+      text-decoration: none;
+      padding: 0.7rem 1.5rem;
+      border: 1px solid var(--cinza-1);
+      border-radius: 4px;
+      transition: all 0.3s;
+    }
+
+    .btn-home:hover {
+      color: var(--verde);
+      border-color: var(--verde-dim);
+    }
+
+    .footer {
+      position: fixed;
+      bottom: 1.5rem;
+      left: 0; right: 0;
+      text-align: center;
+      font-size: 0.6rem;
+      color: var(--cinza-1);
+    }
+  </style>
+</head>
+<body>
+
+  <div class="container">
+    <div class="check">
+      <svg viewBox="0 0 24 24"><polyline points="20 6 9 17 4 12"></polyline></svg>
+    </div>
+    <div class="logo">INTER.PLANAR</div>
+    <div class="subtitle">dimensional transit</div>
+    <h1>Resposta registrada!</h1>
+    <p class="message">
+      Valeu demais por participar. Suas respostas vão ajudar a construir algo <em>inédito</em> na cena eletrônica brasileira. Em breve você vai poder sentir a pista de qualquer lugar.
+    </p>
+    <p class="tagline">O único metaverso feito para quem vive a noite.</p>
+    <a href="/" class="btn-home">← Voltar ao início</a>
+  </div>
+
+  <div class="footer">© 2026 INTER.PLANAR — Belo Horizonte, MG</div>
+
+</body>
+</html>

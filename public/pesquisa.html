@@ -1132,14 +1132,6 @@
 
     </form>
 
-    <!-- ═══ THANK YOU ═══ -->
-    <div class="thank-you" id="thank-you">
-      <div class="logo">INTER.PLANAR</div>
-      <h2>Valeu demais! 🎧</h2>
-      <p>Suas respostas vão ajudar a construir algo inédito na cena eletrônica brasileira. Em breve você vai poder sentir a pista de qualquer lugar.</p>
-      <div class="tagline">O único metaverso feito para quem vive a noite.</div>
-    </div>
-
     <!-- ═══ FOOTER ═══ -->
     <footer class="footer">
       <p>INTER.PLANAR © 2026 — Belo Horizonte, MG</p>
@@ -1260,45 +1252,22 @@
       btn.style.opacity = '0.5';
 
       const data = collectData();
+      
+      // Montar URL com query string
       const GOOGLE_SHEETS_URL = 'https://script.google.com/macros/s/AKfycbwze8XI0FSFOgwd4tHCLCq6rCog6pfz_OkVlw8NTndtzAzgms0Z3bAWZ2NHW_nmMaMFvA/exec';
-
-      // Iframe invisível
-      let iframe = document.getElementById('hidden-iframe');
-      if (!iframe) {
-        iframe = document.createElement('iframe');
-        iframe.name = 'hidden-iframe';
-        iframe.id = 'hidden-iframe';
-        iframe.style.display = 'none';
-        document.body.appendChild(iframe);
-      }
-
-      // Criar form com cada campo separado
-      const form = document.createElement('form');
-      form.method = 'POST';
-      form.action = GOOGLE_SHEETS_URL;
-      form.target = 'hidden-iframe';
-      form.style.display = 'none';
-
+      const params = new URLSearchParams();
       Object.keys(data).forEach(key => {
-        const input = document.createElement('input');
-        input.type = 'hidden';
-        input.name = key;
-        input.value = data[key];
-        form.appendChild(input);
+        params.append(key, data[key]);
       });
 
-      document.body.appendChild(form);
-      form.submit();
-      document.body.removeChild(form);
-
-      setTimeout(showThankYou, 1500);
-    }
-
-    function showThankYou() {
-      document.getElementById('survey-form').style.display = 'none';
-      document.querySelector('.progress-container').style.display = 'none';
-      document.getElementById('thank-you').classList.add('visible');
-      window.scrollTo({ top: 0, behavior: 'smooth' });
+      // Enviar via GET (funciona sempre, sem CORS)
+      const img = new Image();
+      img.src = GOOGLE_SHEETS_URL + '?' + params.toString();
+      
+      // Redirecionar pra página de obrigado
+      setTimeout(() => {
+        window.location.href = '/obrigado.html';
+      }, 1200);
     }
 
     // Init
