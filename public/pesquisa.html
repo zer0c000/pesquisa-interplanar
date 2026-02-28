@@ -1165,6 +1165,7 @@
     }
 
     function nextPage() {
+      collectCurrentPage();
       if (currentPage < totalPages) {
         currentPage++;
         showPage(currentPage);
@@ -1172,6 +1173,7 @@
     }
 
     function prevPage() {
+      collectCurrentPage();
       if (currentPage > 1) {
         currentPage--;
         showPage(currentPage);
@@ -1205,38 +1207,66 @@
       q.addEventListener('change', () => q.classList.add('active'));
     });
 
-    // ─── COLLECT FORM DATA ──────────────────────────────────
-    function collectData() {
-      const form = document.getElementById('survey-form');
-      const data = {};
+    // ─── ACCUMULATED DATA ─────────────────────────────────
+    let savedData = {};
 
-      // Radio buttons
-      form.querySelectorAll('input[type="radio"]:checked').forEach(r => {
-        data[r.name] = r.value;
+    function collectCurrentPage() {
+      const page = document.querySelector(`.page[data-page="${currentPage}"]`);
+      if (!page) return;
+
+      // Radio buttons nesta página
+      page.querySelectorAll('input[type="radio"]:checked').forEach(r => {
+        savedData[r.name] = r.value;
       });
 
-      // Checkboxes
+      // Checkboxes nesta página
+      const checkGroups = {};
+      page.querySelectorAll('input[type="checkbox"]:checked').forEach(c => {
+        if (!checkGroups[c.name]) checkGroups[c.name] = [];
+        checkGroups[c.name].push(c.value);
+      });
+      Object.keys(checkGroups).forEach(k => {
+        savedData[k] = checkGroups[k].join(', ');
+      });
+
+      // Hidden (scales) nesta página
+      page.querySelectorAll('input[type="hidden"]').forEach(h => {
+        if (h.value) savedData[h.name] = h.value;
+      });
+
+      // Text inputs nesta página
+      page.querySelectorAll('input[type="text"], textarea').forEach(t => {
+        if (t.value.trim()) savedData[t.name] = t.value.trim();
+      });
+    }
+
+    // ─── COLLECT ALL (fallback) ──────────────────────────────
+    function collectAllData() {
+      const form = document.getElementById('survey-form');
+
+      form.querySelectorAll('input[type="radio"]:checked').forEach(r => {
+        savedData[r.name] = r.value;
+      });
+
       const checkGroups = {};
       form.querySelectorAll('input[type="checkbox"]:checked').forEach(c => {
         if (!checkGroups[c.name]) checkGroups[c.name] = [];
         checkGroups[c.name].push(c.value);
       });
       Object.keys(checkGroups).forEach(k => {
-        data[k] = checkGroups[k].join(', ');
+        savedData[k] = checkGroups[k].join(', ');
       });
 
-      // Hidden (scales)
       form.querySelectorAll('input[type="hidden"]').forEach(h => {
-        if (h.value) data[h.name] = h.value;
+        if (h.value) savedData[h.name] = h.value;
       });
 
-      // Text inputs
       form.querySelectorAll('input[type="text"], textarea').forEach(t => {
-        if (t.value.trim()) data[t.name] = t.value.trim();
+        if (t.value.trim()) savedData[t.name] = t.value.trim();
       });
 
-      data['timestamp'] = new Date().toISOString();
-      return data;
+      savedData['timestamp'] = new Date().toISOString();
+      return savedData;
     }
 
     // ─── SUBMIT ─────────────────────────────────────────────
@@ -1251,7 +1281,11 @@
       btn.disabled = true;
       btn.style.opacity = '0.5';
 
-      const data = collectData();
+      // Coleta página atual + tudo que sobrou
+      collectCurrentPage();
+      collectAllData();
+
+      const data = savedData;
       
       // Montar URL com query string
       const GOOGLE_SHEETS_URL = 'https://script.google.com/macros/s/AKfycbwze8XI0FSFOgwd4tHCLCq6rCog6pfz_OkVlw8NTndtzAzgms0Z3bAWZ2NHW_nmMaMFvA/exec';
@@ -1268,7 +1302,7 @@
       iframe.src = url;
       document.body.appendChild(iframe);
       
-      // Redirecionar pra página de obrigado após dar tempo pro iframe carregar
+      // Redirecionar pra página de obrigado
       setTimeout(() => {
         window.location.href = '/obrigado.html';
       }, 2000);
