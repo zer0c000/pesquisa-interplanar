@@ -1281,26 +1281,28 @@
       btn.disabled = true;
       btn.style.opacity = '0.5';
 
-      // Coleta página atual
+      // Coleta página atual + tudo
       collectCurrentPage();
-      // Coleta tudo como backup
       collectAllData();
 
       const data = savedData;
-      const GOOGLE_SHEETS_URL = 'https://script.google.com/macros/s/AKfycbwze8XI0FSFOgwd4tHCLCq6rCog6pfz_OkVlw8NTndtzAzgms0Z3bAWZ2NHW_nmMaMFvA/exec';
+      const GOOGLE_SHEETS_URL = 'https://script.google.com/macros/s/AKfycbzFsdwY-8K1QGrqCakxKtEQd2Q9CMxZAGndNj5KV-fm28jT1UQ_p8QzXtB2iX4pcg9epQ/exec';
       const params = new URLSearchParams();
       Object.keys(data).forEach(key => {
         params.append(key, data[key]);
       });
 
-      fetch(GOOGLE_SHEETS_URL + '?' + params.toString(), {
-        mode: 'no-cors',
-        redirect: 'follow'
-      }).then(() => {
+      // Enviar dados via iframe escondido
+      const url = GOOGLE_SHEETS_URL + '?' + params.toString();
+      const iframe = document.createElement('iframe');
+      iframe.style.cssText = 'position:fixed;left:-9999px;width:1px;height:1px;border:none;';
+      iframe.src = url;
+      document.body.appendChild(iframe);
+      
+      // Ir pro obrigado após dar tempo pro iframe carregar
+      setTimeout(() => {
         window.location.href = '/obrigado.html';
-      }).catch(() => {
-        window.location.href = '/obrigado.html';
-      });
+      }, 3000);
     }
 
     // Init
